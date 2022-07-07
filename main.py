@@ -92,11 +92,13 @@ def receive_recording():
 
     audio_base64_str = data.split("data:audio/ogg;base64,")[1]
     decode = base64.b64decode(audio_base64_str)
-
+    # convert ogg to wav in memory
     ogg = AudioSegment.from_ogg(BytesIO(decode))
-    ogg.export("jkdjksgkjdsg.wav", format="wav")
-
-    # Speaker.write(decode)
+    memoBuffer = BytesIO()
+    ogg.export(memoBuffer, format="wav")
+    wav = memoBuffer.getvalue()
+    # pass wav to the speaker
+    Speaker.write(wav)
     return "OK"
 
 
