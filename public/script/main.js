@@ -50,7 +50,7 @@ const StartRecording = async () => {
 
   mediaRecorder.onstop = async () => {
     // A "blob" combines all the audio chunks into a single entity
-    const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
+    const blob = new Blob(chunks, { type: "audio/ogg" });
     chunks = []; // clear buffer
 
     const audioBase64 = await blobToBase64(blob);
