@@ -37,6 +37,10 @@ def verify_password(username, password):
         return False
     return username == os.getenv("USER_NAME") and password == os.getenv("USER_PASSWORD")
 
+###################
+#     Socket      #
+###################
+
 
 @socketio.on('connect')
 def connect():
@@ -51,6 +55,12 @@ def disconnect():
     if socketio.client_count == 0:
         video_provider.stop()
 
+###################
+#     RESTapi     #
+###################
+
+###### static ######
+
 
 @app.route('/<path:path>')
 @auth.login_required
@@ -63,13 +73,24 @@ def send_report(path):
 def default_html():
     return send_file("public/index.html")
 
+####### Microphone ########
+
 
 @app.route("/api/mic/start")
 @auth.login_required
 def mic_start():
     Mic.start_stream()
-    Mic.started = True
     return "OK"
+
+
+@app.route("/api/mic/stop")
+@auth.login_required
+def mic_stop():
+    try:
+        Mic.stop_stream()
+        return "OK"
+    except Exception:
+        return Response("Something Went Wrong", status=500)
 
 
 @app.route("/api/mic/listen")
@@ -77,11 +98,13 @@ def mic_start():
 def mic_listen():
 
     def mic_stream_generator():
-        while Mic.started:
-            data = Mic.read(CHUNK_SIZE)
+        while Mic.is_active():
+            data = Mic.read(CHUNK_SIZE, False)
             yield (data)
 
-    return Response(mic_stream_generator())
+    return Response(mic_stream_generator(), mimetype="audio/wav")
+
+###### play remote sound ######
 
 
 @app.route("/api/recorder", methods=["POST"])
@@ -100,18 +123,6 @@ def receive_recording():
     # pass wav to the speaker
     Speaker.write(wav)
     return "OK"
-
-
-@app.route("/api/mic/stop")
-@auth.login_required
-def mic_stop():
-    try:
-        Mic.stop_stream()
-        Mic.started = False
-        return "OK"
-    except Exception:
-        print(Exception)
-        return Response(status=500)
 
 
 if __name__ == "__main__":

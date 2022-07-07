@@ -10,7 +10,14 @@ Speaker = _p.open(format=FORMAT,
                   rate=RATE,
                   output=True)
 
-Mic = _p.open(format=FORMAT,
+Mic = _p.open(format=pyaudio.paInt32,
               channels=1,
-              rate=RATE,
+              rate=44000,
               input=True)
+
+
+def getNewMicInstance():
+    Mic = _p.open(format=FORMAT,
+                  channels=1,
+                  rate=RATE,
+                  input=True)

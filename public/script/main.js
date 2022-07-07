@@ -11,9 +11,9 @@ const blobToBase64 = (blob) => {
 };
 
 const player = new PCMPlayer({
-  inputCodec: "Int16",
+  inputCodec: "Int32",
   channels: 1,
-  sampleRate: 16000,
+  sampleRate: 44000,
   flushTime: 1000,
 });
 
