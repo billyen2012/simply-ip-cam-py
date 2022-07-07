@@ -1,0 +1,103 @@
+button{
+  border-radius: 4px;
+  padding: 4px;
+  min-width: 80px;
+  border:none;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition:0.3s;
+  color: rgb(74, 74, 74);
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.listen-btn-container{
+  display: flex;
+  align-items: center;
+}
+.recorder-btn-stop{
+  display: none;
+  background-color: rgb(250, 171, 184);
+}
+.listen-btn-container > button{
+  margin-right:4px;
+}
+
+button:hover{
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+button:active{
+  opacity: 0.9;
+  transition: 0s;
+}
+
+button:disabled{
+  background-color:lightgray;
+  color:white
+}
+
+button:disabled:hover{
+  cursor: default;
+  opacity: 1;
+}
+
+.start-listen-btn{
+  background-color: #87d2d8;
+  color:rgb(62, 62, 62);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.start-listen-btn > img{
+  margin-right:4px
+}
+
+.start-stop-btn{
+  background-color: #82acfb;
+  color:white
+}
+
+
+.start-mute-btn{
+  background-color: #82acfb;
+  color:white
+}
+
+.note{
+  padding: 8px 0px;
+}
+
+.mic-status{
+  color:rgb(20, 111, 20);
+  display: none;
+  padding: 4px 0px;
+}
+
+.mute-message{
+  color: rgb(243, 90, 116);
+  display: none;
+  padding: 4px 0px;
+}
+
+.image-container{
+  margin-top: 8px;
+  display: flex;
+}
+.image-container > img {
+  transform: scaleX(-1);
+  width: 100%;
+  height: 70w;
+}
+
+.recorder-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(120, 232, 221);
+}
+.recorder-btn > img{
+  margin-right:4px
+}

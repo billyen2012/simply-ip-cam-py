@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="note">To aviod feedback, please use headphone</div>
+    <div>
+      <div>
+        <div>Listen to camera</div>
+        <div class="listen-btn-container">
+          <button id="start-listen" class="start-listen-btn"><img width="16" height="16" src="./img/speaker.svg" >start</button>
+          <button id="stop-listen" disabled  class="start-stop-btn">stop</button>
+          <button id="mute" disabled  class="start-mute-btn">mute</button>
+        </div>
+      </div>
+      <div>
+        <div>Speark</div>
+        <button id="recorder-btn" class="recorder-btn" value="0"><img width="16" height="16" src="./img/mic.svg" > speak</button>
+        <button id="recorder-btn-stop" class="recorder-btn-stop" value="0"><img width="16" height="16" src="./img/mic.svg" > recording</button>
+      </div>
+    </div>
+    <div id="mic-status" class="mic-status">*remote Mic-on</div>
+    <div id="mute-message" class="mute-message">*remote Muted</div>
+    <div class="image-container"><img id="recording" src="/img/loader.gif"  /></div>
+    <!-- <script src="/script/socket.io.4.5.0.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script src="/script/pcm-player.js"></script>
+    <script src="/script/main.js"></script>
+  </body>
+</html>
