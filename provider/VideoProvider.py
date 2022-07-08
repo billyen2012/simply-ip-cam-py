@@ -29,7 +29,7 @@ class VideoProvider:
             sleep(1 / int(os.getenv("FRAME_PER_SECOND")))
 
     def stop(self):
-        if self.started == True:
+        if self.started:
             self.camera.release()
             self.started = False
 
