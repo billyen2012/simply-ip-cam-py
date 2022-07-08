@@ -18,8 +18,6 @@ $ pip install --global-option='build_ext' --global-option="-I$(brew --prefix)/in
 
 ## Deployment
 
-use `gunicorn` with following command
-
 fist install `gunicorn`
 
 ```console
