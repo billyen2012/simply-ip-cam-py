@@ -118,9 +118,12 @@ def receive_recording():
     transform = None
     if "audio/ogg" in audio_type:
         transform = AudioSegment.from_ogg(BytesIO(decode))
-    elif "audio/webm" in audio_type:
+    if "audio/webm" in audio_type:
         transform = AudioSegment.from_file(
             BytesIO(decode), codec="opus").set_frame_rate(96000)
+    if "audio/mp4" in audio_type:
+        transform = AudioSegment.from_file(
+            BytesIO(decode), format="m4a").set_frame_rate(96000)
     else:
         return Response("audio type not recognized(only ogg and webm)", status=500)
     # # convert ogg to wav in memory
