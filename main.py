@@ -1,11 +1,6 @@
-from ast import Bytes
 import base64
 import os
-import socket
-import struct
 import threading
-from typing import Literal
-import wave
 from provider.AudioProvider import Speaker, Mic, CHUNK_SIZE
 from provider.VideoProvider import VideoProvider
 from flask import Flask, Response, request, send_file, send_from_directory
