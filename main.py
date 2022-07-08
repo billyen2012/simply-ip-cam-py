@@ -29,6 +29,7 @@ socketio = SocketIO(app)
 socketio.client_count = 0
 video_provider = VideoProvider()
 video_provider.emit = socketio.emit
+mic_provider = Mic()
 
 
 @auth.verify_password
@@ -79,18 +80,22 @@ def default_html():
 @app.route("/api/mic/start")
 @auth.login_required
 def mic_start():
-    Mic.start_stream()
-    return "OK"
+    try:
+        if mic_provider.instance.is_active():
+            return "OK"
+        mic_provider.instance.start_stream()
+        return "OK"
+    except:
+        # if there is error, try to get a new mic instances
+        mic_provider.getNewMicInstance()
+        return Response("an error has occured, please reload the page and try again", status=500)
 
 
 @app.route("/api/mic/stop")
 @auth.login_required
 def mic_stop():
-    try:
-        Mic.stop_stream()
-        return "OK"
-    except Exception:
-        return Response("Something Went Wrong", status=500)
+    mic_provider.instance.stop_stream()
+    return "OK"
 
 
 @app.route("/api/mic/listen")
@@ -98,8 +103,8 @@ def mic_stop():
 def mic_listen():
 
     def mic_stream_generator():
-        while Mic.is_active():
-            data = Mic.read(CHUNK_SIZE, False)
+        while mic_provider.instance.is_active():
+            data = mic_provider.instance.read(CHUNK_SIZE, False)
             yield (data)
 
     return Response(mic_stream_generator(), mimetype="audio/wav")
@@ -112,13 +117,20 @@ def mic_listen():
 def receive_recording():
 
     data = request.get_data().decode()
-
-    audio_base64_str = data.split("data:audio/ogg;base64,")[1]
+    audio_type, audio_base64_str = data.split("base64,")
     decode = base64.b64decode(audio_base64_str)
-    # convert ogg to wav in memory
-    ogg = AudioSegment.from_ogg(BytesIO(decode))
+
+    transform = None
+    if "audio/ogg" in audio_type:
+        transform = AudioSegment.from_ogg(BytesIO(decode))
+    elif "audio/webm" in audio_type:
+        transform = AudioSegment.from_file(
+            BytesIO(decode), codec="opus").set_frame_rate(96000)
+    else:
+        return Response("audio type not recognized(only ogg and webm)", status=500)
+    # # convert ogg to wav in memory
     memoBuffer = BytesIO()
-    ogg.export(memoBuffer, format="wav")
+    transform.export(memoBuffer, format="wav")
     wav = memoBuffer.getvalue()
     # pass wav to the speaker
     Speaker.write(wav)

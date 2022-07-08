@@ -43,16 +43,17 @@ const StartRecording = async () => {
   const mediaRecorder = new MediaRecorder(micStream);
   // Create a buffer to store the incoming data.
   let chunks = [];
+  let type = {};
   mediaRecorder.ondataavailable = (event) => {
-    console.log(event.data);
+    type = event.data.type;
     chunks.push(event.data);
   };
 
   mediaRecorder.onstop = async () => {
     // A "blob" combines all the audio chunks into a single entity
-    const blob = new Blob(chunks, { type: "audio/ogg" });
+    const blob = new Blob(chunks, { type });
     chunks = []; // clear buffer
-
+    console.log(Blob);
     const audioBase64 = await blobToBase64(blob);
     console.log(audioBase64);
     // send recording to backend
