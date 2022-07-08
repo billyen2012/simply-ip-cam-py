@@ -60,7 +60,7 @@ def disconnect():
 
 @app.route('/<path:path>')
 @auth.login_required
-def send_report(path):
+def public_folder(path):
     return send_from_directory('public', path)
 
 
