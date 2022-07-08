@@ -53,9 +53,7 @@ const StartRecording = async () => {
     // A "blob" combines all the audio chunks into a single entity
     const blob = new Blob(chunks, { type });
     chunks = []; // clear buffer
-    console.log(Blob);
     const audioBase64 = await blobToBase64(blob);
-    console.log(audioBase64);
     // send recording to backend
     fetch("/api/recorder", {
       method: "POST",
