@@ -45,8 +45,8 @@ def verify_password(username, password):
 @socketio.on('connect')
 def connect():
     socketio.client_count += 1
-    # t = threading.Thread(target=video_provider.start, daemon=True)
-    # t.start()
+    t = threading.Thread(target=video_provider.start, daemon=True)
+    t.start()
 
 
 @socketio.on('disconnect')
@@ -126,5 +126,6 @@ def receive_recording():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3000)
+    app.run(host="0.0.0.0", port=3000, ssl_context=(
+        'certificate/cert.pem', 'certificate/key.pem'))
     socketio.run(app)
