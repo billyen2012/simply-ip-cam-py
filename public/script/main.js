@@ -211,7 +211,6 @@ const init = () => {
       .then(async (res) => res.text())
       .catch((err) => "error");
     if (totalUser !== "error") {
-      console.log(totalUser);
       onlineUserDiv.textContent = `在線人數: ${
         parseInt(totalUser) == 0 ? "" : totalUser
       }`;
