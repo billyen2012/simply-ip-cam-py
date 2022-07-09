@@ -134,6 +134,14 @@ def receive_recording():
     Speaker.write(wav)
     return "OK"
 
+#####  INFO #####
+
+
+@app.route("/api/total-users", methods=["GET"])
+@auth.login_required
+def total_user():
+    return str(socketio.client_count)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3000, ssl_context=(

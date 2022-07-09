@@ -1,11 +1,23 @@
 <html>
   <head>
     <title>Simple Ip Cam</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
-    <div class="note">To aviod feedback, please use headphone</div>
-    <div>
+    <div class="app-bar">
+        <h1>
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-video">
+            <polygon points="23 7 16 12 23 17 23 7"></polygon>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+          </svg>
+          Simply Cam
+        </h1>
+        <span id="online-user">
+
+        </span>
+    </div>
+    <section class="app-content">
       <div>
         <div>Listen to camera</div>
         <div class="listen-btn-container">
@@ -19,10 +31,17 @@
         <button id="recorder-btn" class="recorder-btn" value="0"><img width="16" height="16" src="./img/mic.svg" > speak</button>
         <button id="recorder-btn-stop" class="recorder-btn-stop" value="0"><img width="16" height="16" src="./img/mic.svg" > recording</button>
       </div>
-    </div>
-    <div id="mic-status" class="mic-status">*remote Mic-on</div>
-    <div id="mute-message" class="mute-message">*remote Muted</div>
-    <div class="image-container"><img id="recording" src="/img/loader.gif"  /></div>
+      <div>
+        <div id="mic-status" class="mic-status">*remote Mic-on</div>
+        <div id="mute-message" class="mute-message">*remote Muted</div>
+      </div>
+      <div class="image-container">
+          <span>
+            <img id="recording" src="/img/loader.gif"  />
+            <input totle="contrast filter" id="contrast-filter-range" type="range" min="0" max="200" value="50">
+          </span>
+      </div>
+    </section>
     <!-- <script src="/script/socket.io.4.5.0.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
     <script src="/script/pcm-player.js"></script>

@@ -118,6 +118,8 @@ const init = () => {
   const recordingImg = document.getElementById("recording");
   const recorderBtn = document.getElementById("recorder-btn");
   const recorderBtnStop = document.getElementById("recorder-btn-stop");
+  const onlineUserDiv = document.getElementById("online-user");
+  const contrastFilterRange = document.getElementById("contrast-filter-range");
   // disabled stop button initially
   stopBtn.disabled = true;
   muteBtn.disabled = true;
@@ -198,6 +200,28 @@ const init = () => {
   socket.on("image", (base64) => {
     recordingImg.src = base64;
   });
+
+  contrastFilterRange.addEventListener("input", (e) => {
+    let value = parseInt(e.target.value);
+    recordingImg.style.filter = `brightness(${value / 50})`;
+  });
+
+  const getTotalOnlineUser = async () => {
+    const totalUser = await fetch("/api/total-users")
+      .then(async (res) => res.text())
+      .catch((err) => "error");
+    if (totalUser !== "error") {
+      console.log(totalUser);
+      onlineUserDiv.textContent = `在線人數: ${
+        parseInt(totalUser) == 0 ? "" : totalUser
+      }`;
+    }
+  };
+
+  // get online user
+  getTotalOnlineUser();
+  // then update total online user every 5 second
+  setInterval(getTotalOnlineUser, 5000);
 };
 
 init();

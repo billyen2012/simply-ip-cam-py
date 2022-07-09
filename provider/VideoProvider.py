@@ -3,6 +3,12 @@ from time import sleep
 import cv2
 import base64
 import os
+from dotenv import load_dotenv
+load_dotenv()
+
+IMAGE_WIDTH = int(os.getenv("IMAGE_WIDTH"))
+IMAGE_HEIGHT = int(os.getenv("IMAGE_HEIGTH"))
+CAL_SEND_INTERVAL = 1 / int(os.getenv("FRAME_PER_SECOND"))
 
 
 class VideoProvider:
@@ -26,7 +32,7 @@ class VideoProvider:
             print("broadcasting....")
             frame = self.getFrameBase64()
             self.emit("image", frame, broadcast=True)
-            sleep(1 / int(os.getenv("FRAME_PER_SECOND")))
+            sleep(CAL_SEND_INTERVAL)
 
     def stop(self):
         if self.started:
@@ -35,6 +41,7 @@ class VideoProvider:
 
     def getFrameBase64(self):
         retval, image = self.camera.read()
-        retval, buffer = cv2.imencode('.jpg', image)
+        retval, buffer = cv2.imencode(
+            '.jpg', cv2.resize(image, (IMAGE_WIDTH, IMAGE_HEIGHT)))
         text = base64.b64encode(buffer).decode('utf-8')
         return 'data:image/jpeg;base64,' + " " + text
