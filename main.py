@@ -112,26 +112,34 @@ def mic_listen():
 def receive_recording():
 
     data = request.get_data().decode()
-    audio_type, audio_base64_str = data.split("base64,")
+    audio_info, audio_base64_str = data.split("base64,")
+    audio_type = audio_info.split(";")[0].strip().replace("data:", "")
+    if audio_type not in ["audio/ogg", "audio/webm", "audio/mp4"]:
+        return Response(response="audio type not recognized(only ogg, mp4 and webm)", status=400)
+
     decode = base64.b64decode(audio_base64_str)
 
-    transform = None
-    if "audio/ogg" in audio_type:
-        transform = AudioSegment.from_ogg(BytesIO(decode))
-    elif "audio/webm" in audio_type:
-        transform = AudioSegment.from_file(
-            BytesIO(decode), codec="opus").set_frame_rate(96000)
-    elif "audio/mp4" in audio_type:
-        transform = AudioSegment.from_file(
-            BytesIO(decode), format="m4a").set_frame_rate(96000)
-    else:
-        return Response(response="audio type not recognized(only ogg, mp4 and webm)", status=401)
-    # # convert ogg to wav in memory
-    memoBuffer = BytesIO()
-    transform.export(memoBuffer, format="wav")
-    wav = memoBuffer.getvalue()
-    # pass wav to the speaker
-    Speaker.write(wav)
+    def get_tranform():
+        if "audio/ogg" in audio_type:
+            return AudioSegment.from_ogg(BytesIO(decode))
+        elif "audio/webm" in audio_type:
+            return AudioSegment.from_file(
+                BytesIO(decode), codec="opus").set_frame_rate(96000)
+        elif "audio/mp4" in audio_type:
+            return AudioSegment.from_file(
+                BytesIO(decode), format="m4a").set_frame_rate(96000)
+
+    def process_sound_and_send():
+        transform = get_tranform()
+        # # convert ogg to wav in memory
+        memoBuffer = BytesIO()
+        transform.export(memoBuffer, format="wav")
+        wav = memoBuffer.getvalue()
+        # pass wav to the speaker
+        Speaker.write(wav)
+
+    # send tranform process to thread
+    threading.Thread(target=process_sound_and_send).start()
     return "OK"
 
 #####  INFO #####
