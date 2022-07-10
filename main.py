@@ -152,7 +152,7 @@ def total_user():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3000, ssl_context=(
+    app.run(host="0.0.0.0", port=3000, threaded=True, ssl_context=(
         'certificate/cert.pem', 'certificate/key.pem'))
     # socketio.run(app, port=3000, ssl_context=(
     #     'certificate/cert.pem', 'certificate/key.pem'))
