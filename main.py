@@ -20,7 +20,7 @@ RATE = 22000
 app = Flask(__name__)
 auth = HTTPBasicAuth()
 
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins='*')
 socketio.client_count = 0
 video_provider = VideoProvider()
 video_provider.emit = socketio.emit
@@ -146,4 +146,5 @@ def total_user():
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3000, ssl_context=(
         'certificate/cert.pem', 'certificate/key.pem'))
-    socketio.run(app)
+    # socketio.run(app, port=3000, ssl_context=(
+    #     'certificate/cert.pem', 'certificate/key.pem'))
