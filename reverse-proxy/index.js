@@ -30,6 +30,7 @@ app.use((req, res, next) => {
   console.log("target:", getTarget());
   if (!target)
     return res.status(200).send("Waiting for target ip be available");
+  next();
 });
 
 app.use(wsProxy);
