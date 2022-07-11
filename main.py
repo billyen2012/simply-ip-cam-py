@@ -6,6 +6,7 @@ from provider.VideoProvider import VideoProvider
 from flask import Flask, Response, request, send_file, send_from_directory
 from flask_socketio import SocketIO
 from flask_httpauth import HTTPBasicAuth
+from flask_compress import Compress
 from io import BytesIO
 from pydub import AudioSegment
 import pyaudio
@@ -13,12 +14,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # const
-CHUNK_SIZE = 1024
 FORMAT = pyaudio.paInt16
 RATE = 22000
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
+Compress(app)
 
 socketio = SocketIO(app, cors_allowed_origins='*')
 socketio.client_count = 0
