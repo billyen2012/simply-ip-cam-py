@@ -1,5 +1,6 @@
 # Simple Ip Cam
 
+Version V1.3.1
 ## Dependencies
 
 `pip install Flask`
@@ -11,7 +12,7 @@
 `pip install opencv-python`
 `pip install PyAudio` see below for Mac installation
 
-## install pyaudio
+## Install PyAudio
 
 For mac user
 
