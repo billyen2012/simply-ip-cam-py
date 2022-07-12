@@ -9,13 +9,12 @@ from flask_httpauth import HTTPBasicAuth
 from flask_compress import Compress
 from io import BytesIO
 from pydub import AudioSegment
-import pyaudio
 from dotenv import load_dotenv
 load_dotenv()
 
-# const
-FORMAT = pyaudio.paInt16
-RATE = 22000
+WEBM_FRAME_RATE = 96000
+MP4_FRAME_RATE = 96000
+
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
@@ -40,7 +39,9 @@ def verify_password(username, password):
 
 
 @socketio.on('connect')
+@auth.login_required
 def connect():
+    # verify user
     socketio.client_count += 1
     t = threading.Thread(target=video_provider.start, daemon=True)
     t.start()
@@ -125,10 +126,10 @@ def receive_recording():
             return AudioSegment.from_ogg(BytesIO(decode))
         elif "audio/webm" in audio_type:
             return AudioSegment.from_file(
-                BytesIO(decode), codec="opus").set_frame_rate(96000)
+                BytesIO(decode), codec="opus").set_frame_rate(WEBM_FRAME_RATE)
         elif "audio/mp4" in audio_type:
             return AudioSegment.from_file(
-                BytesIO(decode), format="m4a").set_frame_rate(96000)
+                BytesIO(decode), format="m4a").set_frame_rate(MP4_FRAME_RATE)
 
     def process_sound_and_send():
         transform = get_tranform()
