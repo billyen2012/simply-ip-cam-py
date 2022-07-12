@@ -1,4 +1,3 @@
-from concurrent.futures import thread
 from time import sleep
 import cv2
 import base64
