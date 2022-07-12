@@ -100,7 +100,7 @@ const startListen = () => {
                 return;
               }
               // feed the buffer to pcm player
-              setTimeout(player.feed(value.buffer), 30);
+              player.feed(value.buffer);
               return pump();
             });
           }
