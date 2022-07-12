@@ -1,6 +1,6 @@
 # Simple Ip Cam
 
-Version V1.3.1
+Version V1.3.4
 ## Dependencies
 
 `pip install Flask` <br>
