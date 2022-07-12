@@ -60,6 +60,7 @@ button{
 .listen-btn-container{
   display: flex;
   align-items: center;
+  margin-top: 4px;
 }
 .recorder-btn-stop{
   display: none;
@@ -95,7 +96,6 @@ button:disabled:hover{
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-top: 4px;
 }
 .start-listen-btn > img{
   margin-right:4px
