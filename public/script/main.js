@@ -131,6 +131,7 @@ const init = () => {
       .then((res) => {
         if (res.status === 200) {
           startListen();
+          player.volume(1);
           startBtn.disabled = true;
           stopBtn.disabled = false;
           muteBtn.disabled = false;
@@ -150,12 +151,12 @@ const init = () => {
     fetch("/api/mic/stop")
       .then((res) => {
         if (res.status === 200) {
+          player.volume(0);
           startBtn.disabled = false;
           stopBtn.disabled = true;
           muteBtn.disabled = true;
           micStatus.style.display = "none";
           // reset mute event
-          player.volume(1);
           muteBtn.textContent = "mute";
           muteMessage.style.display = "none";
           return;
