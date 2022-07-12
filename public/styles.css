@@ -162,3 +162,8 @@ button:disabled:hover{
 .recorder-btn > img{
   margin-right:4px
 }
+.audio-visual-canvas{
+  border-radius: 2px;
+  margin-top: 8px;
+  display: none;
+}

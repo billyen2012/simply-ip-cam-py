@@ -2,13 +2,8 @@ const FEAME_PER_SECOND = 30;
 
 const socket = io();
 
-const blobToBase64 = (blob) => {
-  return new Promise((resolve, _) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
-    reader.readAsDataURL(blob);
-  });
-};
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const analyser = audioCtx.createAnalyser();
 
 const player = new PCMPlayer({
   inputCodec: "Int32",
@@ -17,10 +12,17 @@ const player = new PCMPlayer({
   flushTime: 1000,
 });
 
-player.volume(1);
-
 const GlobalStore = {
   recorder: null,
+  audioListenController: new AbortController(),
+};
+
+const blobToBase64 = (blob) => {
+  return new Promise((resolve, _) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
 };
 
 const streamingCamera = () => {
@@ -83,29 +85,55 @@ const StartRecording = async () => {
   };
 };
 
-const startListen = () => {
+const startListen = (audioVisualizerCanvasCtx) => {
+  /**
+   * @param {byte[]} buffer
+   */
+  const draw = (buffer = []) => {
+    let WIDTH = audioVisualizerCanvasCtx.clientWidth;
+    let HEIGHT = audioVisualizerCanvasCtx.clientHeight;
+    // clear canvas
+    audioVisualizerCanvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+    const barWidth = (WIDTH / buffer.length) * 2.5;
+    const VOLUME_THRESHOLD = 100;
+    let barHeight;
+    let x = 0;
+    let previous = null;
+    for (let i = 0; i < buffer.length; i++) {
+      barHeight = buffer[i];
+      if (barHeight > VOLUME_THRESHOLD) continue; // skip noise
+
+      if (barHeight > previous && barHeight > previous + 1) {
+        barHeight = previous + 1;
+      } else if (barHeight < previous && barHeight < previous - 1) {
+        barHeight = previous - 1;
+      }
+
+      previous = barHeight;
+      audioVisualizerCanvasCtx.fillStyle = "rgb(0,255,0)";
+      audioVisualizerCanvasCtx.fillRect(x, HEIGHT, barWidth, -barHeight);
+      x += barWidth;
+    }
+  };
+  // set new abortcontroller instance
+  GlobalStore.audioListenController = new AbortController();
   // no need to memorize this, just copy and paste like a pro (https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams)
-  fetch("/api/mic/listen")
+  fetch("/api/mic/listen", {
+    signal: GlobalStore.audioListenController.signal,
+  })
     // Retrieve its body as ReadableStream
-    .then((response) => {
+    .then(async (response) => {
       const reader = response.body.getReader();
-      return new ReadableStream({
-        start(controller) {
-          return pump();
-          function pump() {
-            return reader.read().then(({ done, value }) => {
-              // When no more data needs to be consumed, close the stream
-              if (done) {
-                controller.close();
-                return;
-              }
-              // feed the buffer to pcm player
-              player.feed(value.buffer);
-              return pump();
-            });
-          }
-        },
-      });
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        player.feed(value.buffer);
+        draw(value);
+      }
+    })
+    .catch((err) => {
+      if (err.message.includes("aborted")) return;
+      console.log(err);
     });
 };
 
@@ -120,6 +148,14 @@ const init = () => {
   const recorderBtnStop = document.getElementById("recorder-btn-stop");
   const onlineUserDiv = document.getElementById("online-user");
   const contrastFilterRange = document.getElementById("contrast-filter-range");
+  const audioVisualizerCanvas = document.getElementById(
+    "audio-visualizer-canvas"
+  );
+  const audioVisualizerCanvasCtx = audioVisualizerCanvas.getContext("2d");
+  audioVisualizerCanvasCtx.clientWidth =
+    audioVisualizerCanvas.getAttribute("width");
+  audioVisualizerCanvasCtx.clientHeight =
+    audioVisualizerCanvas.getAttribute("height");
   // disabled stop button initially
   stopBtn.disabled = true;
   muteBtn.disabled = true;
@@ -130,12 +166,13 @@ const init = () => {
     fetch("/api/mic/start")
       .then((res) => {
         if (res.status === 200) {
-          startListen();
+          startListen(audioVisualizerCanvasCtx);
           player.volume(1);
           startBtn.disabled = true;
           stopBtn.disabled = false;
           muteBtn.disabled = false;
           micStatus.style.display = "block";
+          audioVisualizerCanvas.style.display = "block";
           return;
         }
         throw new Error();
@@ -150,6 +187,7 @@ const init = () => {
   stopBtn.addEventListener("click", () => {
     fetch("/api/mic/stop")
       .then((res) => {
+        GlobalStore.audioListenController.abort();
         if (res.status === 200) {
           player.volume(0);
           startBtn.disabled = false;
@@ -159,6 +197,7 @@ const init = () => {
           // reset mute event
           muteBtn.textContent = "mute";
           muteMessage.style.display = "none";
+          audioVisualizerCanvas.style.display = "none";
           return;
         }
         throw new Error();
