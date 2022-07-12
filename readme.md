@@ -1,5 +1,16 @@
 # Simple Ip Cam
 
+## Dependencies
+
+`pip install Flask`
+`pip install python-dotenv`
+`pip install python-socketio`
+`pip install Flask-HTTPAuth`
+`pip install Flask-Compress`
+`pip install pydub`
+`pip install opencv-python`
+`pip install PyAudio` see below for Mac installation
+
 ## install pyaudio
 
 For mac user
