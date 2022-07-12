@@ -3,14 +3,14 @@
 Version V1.3.1
 ## Dependencies
 
-`pip install Flask`
-`pip install python-dotenv`
-`pip install python-socketio`
-`pip install Flask-HTTPAuth`
-`pip install Flask-Compress`
-`pip install pydub`
-`pip install opencv-python`
-`pip install PyAudio` see below for Mac installation
+`pip install Flask` <br>
+`pip install python-dotenv` <br>
+`pip install python-socketio` <br>
+`pip install Flask-HTTPAuth` <br>
+`pip install Flask-Compress` <br>
+`pip install pydub` <br>
+`pip install opencv-python` <br>
+`pip install PyAudio` see below for Mac <br> installation
 
 ## Install PyAudio
 
