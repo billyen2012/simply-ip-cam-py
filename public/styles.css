@@ -95,6 +95,7 @@ button:disabled:hover{
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  margin-top: 4px;
 }
 .start-listen-btn > img{
   margin-right:4px
@@ -158,6 +159,7 @@ button:disabled:hover{
   align-items: center;
   justify-content: center;
   background-color: rgb(120, 232, 221);
+  margin-top: 4px;
 }
 .recorder-btn > img{
   margin-right:4px
