@@ -10,7 +10,7 @@ Version V1.3.1
 `pip install Flask-Compress` <br>
 `pip install pydub` <br>
 `pip install opencv-python` <br>
-`pip install PyAudio` see below for Mac <br> installation
+`pip install PyAudio` see below for Mac installation <br>
 
 ## Install PyAudio
 
