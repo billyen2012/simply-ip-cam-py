@@ -18,7 +18,7 @@
         </span>
     </div>
     <section class="app-content">
-      <div>
+      <div class="upper-control-container">
         <div>Listen to camera</div>
         <div class="listen-btn-container">
           <button id="start-listen" class="start-listen-btn"><img width="16" height="16" src="./img/speaker.svg" >start</button>
@@ -27,10 +27,16 @@
         </div>
         <canvas class="audio-visual-canvas" id="audio-visualizer-canvas" width="250" height="10"></canvas>
       </div>
-      <div>
-        <div>Speak</div>
-        <button id="recorder-btn" class="recorder-btn" value="0"><img width="16" height="16" src="./img/mic.svg" > speak</button>
-        <button id="recorder-btn-stop" class="recorder-btn-stop" value="0"><img width="16" height="16" src="./img/mic.svg" > recording</button>
+      <div class="lower-control-container">
+        <div>
+          <div>Speak</div>
+          <button id="recorder-btn" class="recorder-btn" value="0"><img width="16" height="16" src="./img/mic.svg" > speak</button>
+          <button id="recorder-btn-stop" class="recorder-btn-stop" value="0"><img width="16" height="16" src="./img/mic.svg" > recording</button>
+        </div>
+        <div>
+          <div>Mirror</div>
+          <button id="mirror-btn" class="mirror-btn" value="0">Mirror</button>
+        </div>
       </div>
       <div>
         <div id="mic-status" class="mic-status">*remote Mic-on</div>

@@ -3,6 +3,7 @@ import cv2
 import base64
 import os
 from dotenv import load_dotenv
+from datetime import datetime
 load_dotenv()
 
 IMAGE_WIDTH = int(os.getenv("IMAGE_WIDTH"))
@@ -26,6 +27,20 @@ class VideoProvider:
             self.started = True
             self.startBroadcastImage()
 
+    def addTimeToImage(self, image):
+        now = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+
+        image = cv2.putText(
+            img=image,
+            text=now,
+            color=(0, 190, 0),
+            thickness=1,
+            org=(7, 20),
+            fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+            fontScale=0.5,
+        )
+        return image
+
     def startBroadcastImage(self):
         while self.started:
             print("broadcasting....")
@@ -40,7 +55,8 @@ class VideoProvider:
 
     def getFrameBase64(self):
         retval, image = self.camera.read()
-        retval, buffer = cv2.imencode(
-            '.jpg', cv2.resize(image, (IMAGE_WIDTH, IMAGE_HEIGHT)))
+        image = cv2.resize(image, (IMAGE_WIDTH, IMAGE_HEIGHT))
+        image = self.addTimeToImage(image)
+        retval, buffer = cv2.imencode('.jpg', image)
         text = base64.b64encode(buffer).decode('utf-8')
         return 'data:image/jpeg;base64,' + " " + text

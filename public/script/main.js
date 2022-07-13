@@ -156,6 +156,7 @@ const init = () => {
     audioVisualizerCanvas.getAttribute("width");
   audioVisualizerCanvasCtx.clientHeight =
     audioVisualizerCanvas.getAttribute("height");
+  const mirrorBtn = document.getElementById("mirror-btn");
   // disabled stop button initially
   stopBtn.disabled = true;
   muteBtn.disabled = true;
@@ -233,6 +234,17 @@ const init = () => {
     GlobalStore.recorder.stop();
     recorderBtn.style.display = "flex";
     recorderBtnStop.style.display = "none";
+  });
+
+  mirrorBtn.addEventListener("click", (e) => {
+    value = parseInt(e.target.value);
+    if (value) {
+      e.target.value = 0;
+      recordingImg.style.transform = null;
+    } else {
+      e.target.value = 1;
+      recordingImg.style.transform = "scaleX(-1)";
+    }
   });
 
   // start streaming picture
